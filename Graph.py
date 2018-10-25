@@ -27,4 +27,3 @@ class Graph:
     def draw_piece(self, canvas, fromx, fromy, tox, toy):
         cw = canvas.winfo_width()
         ch = canvas.winfo_height()
-        
