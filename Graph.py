@@ -9,8 +9,8 @@ class Graph:
     bounded_graphs = [] # only points which exists on rectangle (fromx, fromy)x(tox, toy)
     linecolors = [] # list of strings
 
-    fromx, fromy = 2.32, 4
-    tox, toy = 2.5, 10
+    fromx, fromy = 0, 0
+    tox, toy = 100, 100
 
     def __init__(self, root):
         self.root = root
@@ -21,19 +21,39 @@ class Graph:
 
         self.shift_OX_up = 30
         self.shift_OX_right = 30
-        self.shift_OY_up = 30
-        self.shift_OY_right = 30
+        self.shift_OY_up = self.shift_OX_up
+        self.shift_OY_right = self.shift_OX_right
 
         self.accuracy = 3 #TODO: deal with it
 
         self.draw_axes()
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
+    def add_graph(self, points, color):
+        self.init_graphs.append(points)
+        self.linecolors.append(color)
+        self.bounded_graphs.append(self.bound_graph(points))
+        self.draw_graph(self.bounded_graphs[-1], self.linecolors[-1], True)
+
+    def change_boundaries(self, fromx, fromy, tox, toy):
+        self.fromx = fromx
+        self.fromy = fromy
+        self.tox = tox
+        self.toy = toy
+
+        self.canvas.delete('all')
+        self.draw_axes()
+        self.bounded_graphs.clear()
+        for i in range(len(self.init_graphs)):
+            self.bounded_graphs.append(self.bound_graph(self.init_graphs[i]))
+            self.draw_graph(self.bounded_graphs[i], self.linecolors[i])
+
     def update(self, event):
         self.canvas.delete('all')
         self.canvas.config(height=self.root.winfo_width() // 2)
         self.draw_axes()
-        #TODO: Draw all plots
+        for i in range(len(self.bounded_graphs)):
+            self.draw_graph(self.bounded_graphs[i], self.linecolors[i])
 
     def draw_axes(self):
         self.canvas.create_line(self.shift_OX_right - 1, self.convertY(self.shift_OX_up), self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up), width=3,
@@ -124,25 +144,30 @@ class Graph:
     def scaleY(self, y):
         return y * (self.canvas.winfo_height() - 5 - 10) / (self.toy - self.fromy)
 
-    def rescale(self, fromx, fromy, tox, toy):
-        self.bounded_graphs.clear()
-        for plot in self.init_graphs:
-            b_plot = list()
-            added = False
-            for i in range(len(plot)):
-                if fromx <= plot[i][0] <= tox and fromy <= plot[i][1] <= toy:
-                    b_plot.append(plot[i])
-                    if not added and i != 0:
-                        b_plot.append(plot[i - 1]) #add previous point if current added
-                    added = True
-                elif added:
-                    b_plot.append(plot[i]) #add point if previous one was added
-                    added = False
+    def bound_graph(self, plot):
+        b_plot = list()
+        added = False
+        for i in range(len(plot)):
+            if self.fromx <= plot[i][0] <= self.tox and self.fromy <= plot[i][1] <= self.toy:
+                b_plot.append(plot[i])
+                if not added and i != 0:
+                    b_plot.append(plot[i - 1]) #add previous point if current added
+                added = True
+            elif added:
+                b_plot.append(plot[i]) #add point if previous one was added
+                added = False
 
-            self.bounded_graphs.append(b_plot)
+        return b_plot
 
-    def draw_graph(self, graph_points, color):
-        pass
+    def draw_graph(self, graph_points, color, animated=False):
+        self.canvas.update()
+        for i in range(1, len(graph_points)):
+            self.canvas.create_line(self.scaleX(graph_points[i - 1][0]) + self.shift_OX_right,
+                                    self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
+                                    self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
+            if animated:
+                time.sleep(2 / len(graph_points))
+                self.canvas.update()
 
     def convertY(self, y):
         return self.canvas.winfo_height() - y

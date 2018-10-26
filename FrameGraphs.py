@@ -9,21 +9,26 @@ class FrameGraphs:
     background_color = "#20232a"
 
     def __init__(self, root):
-        frame = Frame(root, background=self.background_color)
-        frame.pack(fill=BOTH, expand=1)
-        frame.pack_propagate(0)
+        self.frame = Frame(root, background=self.background_color)
+        self.frame.pack(fill=BOTH, expand=1)
+        self.frame.pack_propagate(0)
 
-        dataList = []
+        self.graph_1 = Graph(self.frame)
 
-        x = 0
-        for i in range(100):
-            dataList.append((x, math.sin(x) + 1))
-            x += 0.5
-
-        graph_1 = Graph(frame)
-        #graph_1.draw_plots()
+        b = Button(text="draw", command=self.draw)
+        b.pack()
         #self.graph_2 = Graph(frame, dataList, "red")
         #self.graph_3 = Graph(frame, dataList, "red")
+
+    def draw(self):
+        dataList = []
+        x = 0
+        for i in range(100):
+            dataList.append((x, 1 + math.sin(x)))
+            x += 0.1
+
+        self.graph_1.change_boundaries(0, 0, 10, 2.5)
+        self.graph_1.add_graph(dataList, "blue")
 
     def resize_graphs(self):
         pass
