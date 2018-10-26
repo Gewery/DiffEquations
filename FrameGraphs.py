@@ -20,7 +20,8 @@ class FrameGraphs:
             dataList.append((x, math.sin(x) + 1))
             x += 0.5
 
-        self.graph_1 = Graph(frame, dataList, "red")
+        graph_1 = Graph(frame)
+        #graph_1.draw_plots()
         #self.graph_2 = Graph(frame, dataList, "red")
         #self.graph_3 = Graph(frame, dataList, "red")
 
