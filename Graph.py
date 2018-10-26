@@ -9,8 +9,8 @@ class Graph:
     bounded_graphs = [] # only points which exists on rectangle (fromx, fromy)x(tox, toy)
     linecolors = [] # list of strings
 
-    fromx, fromy = 0, 0
-    tox, toy = 100, 100
+    fromx, fromy = 2.32, 4
+    tox, toy = 2.5, 10
 
     def __init__(self, root):
         self.root = root
@@ -18,6 +18,13 @@ class Graph:
         self.canvas = Canvas(root, height=int(root.winfo_width()//2), bg=self.background_color)
         self.canvas.pack(fill=X, padx=10, pady=70) #TODO change padding to see more graphs
         self.canvas.update()
+
+        self.shift_OX_up = 30
+        self.shift_OX_right = 30
+        self.shift_OY_up = 30
+        self.shift_OY_right = 30
+
+        self.accuracy = 3 #TODO: deal with it
 
         self.draw_axes()
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
@@ -29,46 +36,93 @@ class Graph:
         #TODO: Draw all plots
 
     def draw_axes(self):
-        self.canvas.create_line(20 - 1, self.convertY(20), self.canvas.winfo_width() - 5, self.convertY(20), width=3,
+        self.canvas.create_line(self.shift_OX_right - 1, self.convertY(self.shift_OX_up), self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up), width=3,
                                 fill="white")# OX axis
-        self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(20 - 1), self.canvas.winfo_width() - 5 - 10,
-                                self.convertY(20 + 7), width=2, fill="white")# arrow on OX
-        self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(20 + 1), self.canvas.winfo_width() - 5 - 10,
-                                self.convertY(20 - 7), width=2, fill="white")
+        self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up - 1), self.canvas.winfo_width() - 5 - 10,
+                                self.convertY(self.shift_OX_up + 7), width=2, fill="white")# arrow on OX
+        self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up + 1), self.canvas.winfo_width() - 5 - 10,
+                                self.convertY(self.shift_OX_up - 7), width=2, fill="white")
 
-        self.canvas.create_line(20, self.convertY(20 - 1), 20, self.convertY(self.canvas.winfo_height() - 5), width=3,
+        self.canvas.create_line(self.shift_OY_right, self.convertY(self.shift_OY_up - 1), self.shift_OY_right, self.convertY(self.canvas.winfo_height() - 5), width=3,
                                 fill="white")# OY axis
-        self.canvas.create_line(20 + 1, self.convertY(self.canvas.winfo_height() - 5), 20 - 7,
+        self.canvas.create_line(self.shift_OY_right + 1, self.convertY(self.canvas.winfo_height() - 5), self.shift_OY_right - 7,
                                 self.convertY(self.canvas.winfo_height() - 5 - 10), width=2,
                                 fill="white")# arrow on OY
-        self.canvas.create_line(20 - 1, self.convertY(self.canvas.winfo_height() - 5), 20 + 7,
+        self.canvas.create_line(self.shift_OY_right - 1, self.convertY(self.canvas.winfo_height() - 5), self.shift_OY_right + 7,
                                 self.convertY(self.canvas.winfo_height() - 5 - 10), width=2,
                                 fill="white")
 
+        #Mark OX:
+        dist_text_from_OX = 12
+
+        integer = True
         n = 15
         dx = (self.tox - self.fromx) / n
-        if dx > 10:
-            dx //= 10
-            dx *= 10
-        elif dx > 1:
+        if dx >= 5:
+            dx //= 5
+            dx *= 5
+        elif dx >= 1:
             dx = int(dx)
-        #TODO: write else
+        else:
+            integer = False
 
-        first_mark = self.fromx
-        if self.fromx > 1:
-            first_mark = (first_mark + 9) // 10
-            first_mark *= 10
+        first_mark_ox = self.fromx
+        if self.fromx >= 1 and (4 + first_mark_ox) // 5 < self.tox and integer:
+            first_mark_ox = (4 + first_mark_ox) // 5
+            first_mark_ox *= 5
+        else:
+            integer = False
 
-        px = 20 + self.scaleX(first_mark - self.fromx)
-        x = first_mark
-        while px <= self.canvas.winfo_width() - 5:
-            self.canvas.create_line(px, self.convertY(15), px, self.convertY(25), width=1, fill="white")
-            self.canvas.create_text(px, self.convertY(10), text='%5.1f'%x, fill="yellow")
+        self.accuracy = 3 # to 3rd number after .
+
+        px = self.shift_OX_right + self.scaleX(first_mark_ox - self.fromx) # calculate x in pixels
+        x = first_mark_ox
+        while px < self.canvas.winfo_width() - 5:
+            self.canvas.create_line(px, self.convertY(self.shift_OX_up - 5), px, self.convertY(self.shift_OX_up + 5), width=1, fill="white")
+            self.canvas.create_text(px, self.convertY(self.shift_OX_up - dist_text_from_OX), text=int(x) if integer else int(x*(10**self.accuracy))/(10**self.accuracy), fill="white")
             x += dx
             px += self.scaleX(dx)
 
+
+        # Mark OY:
+
+        dist_text_from_OY = 15
+
+        integer = True
+        n = 10
+        dy = (self.toy - self.fromy) / n
+        if dy >= 5:
+            dy //= 5
+            dy *= 5
+        elif dy >= 1:
+            dy = int(dy)
+        else:
+            integer = False
+
+        first_mark_oy = self.fromy
+        if self.fromy >= 1 and (4 + first_mark_oy) // 5 < self.toy and integer:
+            first_mark_oy = (4 + first_mark_oy) // 5
+            first_mark_oy *= 5
+        else:
+            integer = False
+
+        self.accuracy = 3  # to 3rd number after .
+
+        py = self.shift_OY_up + self.scaleY(first_mark_oy - self.fromy) # calculate y in pixels
+        y = first_mark_oy
+        while py < self.canvas.winfo_width() - 5:
+            self.canvas.create_line(self.shift_OY_right - 5, self.convertY(py), self.shift_OX_right + 5, self.convertY(py), width=1, fill="white")
+            self.canvas.create_text(self.shift_OY_right - dist_text_from_OY, self.convertY(py),
+                                    text=int(y) if integer else int(y * (10 ** self.accuracy)) / (10 ** self.accuracy),# rounding
+                                    fill="white")
+            y += dy
+            py += self.scaleY(dy)
+
     def scaleX(self, x):
         return x * (self.canvas.winfo_width() - 5 - 10) / (self.tox - self.fromx)
+
+    def scaleY(self, y):
+        return y * (self.canvas.winfo_height() - 5 - 10) / (self.toy - self.fromy)
 
     def rescale(self, fromx, fromy, tox, toy):
         self.bounded_graphs.clear()
