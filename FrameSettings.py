@@ -9,9 +9,14 @@ class FrameSettings:
     settings_expanded = False
 
     def __init__(self, root, images):
-        self.frame = Frame(root, background=self.background_color, width=self.frame_width_1)
-        self.frame.pack(side=RIGHT, fill=Y)
-        self.frame.pack_propagate(0)
+        root.update()
+        self.frame = Frame(root, width=self.frame_width_1, height=root.winfo_screenheight(), borderwidth=0, highlightthickness=0)
+        self.frame.place(relx=1, rely=0, anchor=NE)
+        #self.frame.pack_propagate(0)
+
+        background_image = images.settings_background_PhotoImage
+        background_label = Label(self.frame, image=background_image, borderwidth=0, highlightthickness=0)
+        background_label.place(relx=0, rely=0)
 
         self.button_settings_image = images.button_settings_PhotoImage
         self.button_settings_hover_image = images.button_settings_hover_PhotoImage
@@ -20,7 +25,8 @@ class FrameSettings:
         button_settings = Button(self.frame, image=self.button_settings_image, bg=self.background_color, bd=0,
                                  state="normal",
                                  activebackground=self.background_color)
-        button_settings.pack(pady=10, padx=7)
+        button_settings.place(relx=0.5, rely=0, y=10, anchor=N)
+
         button_settings.bind('<Enter>', lambda event, img=self.button_settings_hover_image: self.change_img(event, img))
         button_settings.bind('<Leave>', lambda event, img=self.button_settings_image: self.change_img(event, img))
         button_settings.bind('<Button-1>', self.expand_settings)
