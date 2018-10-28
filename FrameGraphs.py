@@ -9,14 +9,33 @@ class FrameGraphs:
     background_color = "#20232a"
 
     def __init__(self, root):
+
+        # topframe = Frame(root, background=self.background_color)
+        # topframe.pack(fill=BOTH, expand=1)
+        #
+        # canvas = Canvas(topframe)
+        # scrollbar = Scrollbar(topframe, orient='vertical', command=canvas.yview)
+        # canvas.configure(yscrollcommand=scrollbar.set)
+        #
+        # scrollbar.pack(side=RIGHT, fill=Y)
+        # canvas.pack(side=LEFT) # side ?
+        #
+        # canvas.create_window((0, 0), window=self.frame, anchor=NW)
+
+        #self.frame.bind()
+
         self.frame = Frame(root, background=self.background_color)
         self.frame.pack(fill=BOTH, expand=1)
         self.frame.pack_propagate(0)
 
-        self.graph_1 = Graph(self.frame)
 
-        b = Button(text="draw", command=self.draw)
-        b.pack()
+        self.graph_1 = Graph(self.frame)
+        self.graph_2 = Graph(self.frame)
+
+        #scrollbar.config(command=self.frame.yview)
+
+        #b = Button(text="draw", command=self.draw)
+        #b.pack()
         #self.graph_2 = Graph(frame, dataList, "red")
         #self.graph_3 = Graph(frame, dataList, "red")
 
