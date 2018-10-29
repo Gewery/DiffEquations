@@ -27,7 +27,7 @@ class Graph:
         self.accuracy = 3 #TODO: deal with it
 
         self.draw_axes()
-        self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
+        #self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, points, color):
         self.init_graphs.append(points)
