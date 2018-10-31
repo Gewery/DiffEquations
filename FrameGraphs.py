@@ -1,8 +1,19 @@
 from tkinter import *
 from Calculations.ExactSolution import ExactSolution
+
 from Calculations.Euler import Euler
 from Calculations.EulerLocalError import EulerLocalError
 from Calculations.EulerGlobalError import EulerGlobalError
+
+from Calculations.ImprovedEuler import ImprovedEuler
+from Calculations.ImprovedEulerLocalError import ImprovedEulerLocalError
+from Calculations.ImprovedEulerGlobalError import ImprovedEulerGlobalError
+
+from Calculations.RungeKutta import RungeKutta
+from Calculations.RungeKuttaLocalError import RungeKuttaLocalError
+from Calculations.RungeKuttaGlobalError import RungeKuttaGlobalError
+
+
 from Graph import Graph
 import math
 from Plane import Plane
@@ -51,7 +62,14 @@ class FrameGraphs:
     def draw(self):
         exact_solution_function_graph = Graph(self.function_plane, ExactSolution(), 'red')
 
-        # euler_function_graph = Graph(self.function_plane, Euler(), 'blue')
-        # euler_local_error_graph = Graph(self.local_error_plane, EulerLocalError(), 'blue')
+        euler_function_graph = Graph(self.function_plane, Euler(), 'blue')
         # euler_global_error_graph = Graph(self.global_error_plane, EulerGlobalError(), 'blue')
+
+        improved_euler_function_graph = Graph(self.function_plane, ImprovedEuler(), 'yellow')
+
+
+
+        euler_local_error_graph = Graph(self.local_error_plane, EulerLocalError(), 'blue', exact_solution_function_graph.points)
+        improved_euler_local_error_graph = Graph(self.local_error_plane, ImprovedEulerLocalError(), 'yellow', exact_solution_function_graph.points)
+
 

@@ -1,10 +1,10 @@
 from tkinter import *
-import time
+import time, math
 
 
 class Plane:
     background_color = "#20232a"
-    graphs = []
+    graphs = None
 
     fromx, fromy = 0, 0
     tox, toy = 290000, 100
@@ -16,6 +16,7 @@ class Plane:
         self.canvas.pack(fill=X, padx=10, pady=50)
         self.canvas.pack_propagate(0)
         self.canvas.update()
+        self.graphs = []
 
         self.shift_OX_up = 30
         self.shift_OX_right = 30
@@ -28,13 +29,21 @@ class Plane:
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, graph):
+        print(self, self.graphs)
+        changed = False
         if len(self.graphs) == 0:
-            miny = graph.points[0][1]
-            maxy = graph.points[0][1]
-            for pnt in graph.points:
-                miny = min(miny, pnt[1])
-                maxy = max(maxy, pnt[1])
-            self.change_boundaries(graph.x0 - graph.x0*0.1, miny - miny*0.1, graph.tox + graph.tox*0.1, maxy + maxy*0.1)
+            self.fromy = graph.points[0][1]
+            self.toy = graph.points[0][1]
+            changed = True
+        for pnt in graph.points:
+            if pnt[1] < self.fromy:
+                self.fromy = pnt[1]
+                changed = True
+            if pnt[1] > self.toy:
+                self.toy = pnt[1]
+                changed = True
+        if changed:
+            self.change_boundaries(graph.x0 - abs(graph.x0*0.1), self.fromy - abs(self.fromy*0.1), graph.tox + graph.tox*0.1, self.toy + abs(self.toy*0.1))
 
         self.graphs.append(graph)
         self.draw_graph(self.bound_graph(graph.points), graph.line_color, True)
