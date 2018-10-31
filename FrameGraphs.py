@@ -1,8 +1,9 @@
 from tkinter import *
-from Calculations.CalculationMethod import CalculationMethod
 from Calculations.ExactSolution import ExactSolution
-
-#from Graph import Graph
+from Calculations.Euler import Euler
+from Calculations.EulerLocalError import EulerLocalError
+from Calculations.EulerGlobalError import EulerGlobalError
+from Graph import Graph
 import math
 from Plane import Plane
 
@@ -48,7 +49,9 @@ class FrameGraphs:
         self.canvas.itemconfig(self.window, width=self.canvas.winfo_width())
 
     def draw(self):
-        es = ExactSolution()
+        exact_solution_function_graph = Graph(self.function_plane, ExactSolution(), 'red')
 
-        self.function_plane.change_boundaries(1, 0, 10, 7)
-        self.function_plane.add_graph(es.calculate(1, 9.5, 0.1), 'red')
+        # euler_function_graph = Graph(self.function_plane, Euler(), 'blue')
+        # euler_local_error_graph = Graph(self.local_error_plane, EulerLocalError(), 'blue')
+        # euler_global_error_graph = Graph(self.global_error_plane, EulerGlobalError(), 'blue')
+

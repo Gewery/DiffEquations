@@ -4,12 +4,10 @@ import time
 
 class Plane:
     background_color = "#20232a"
-    init_graphs = [] # list of lists of tuples (x_i, y_i)
-    bounded_graphs = [] # only points which exists on rectangle (fromx, fromy)x(tox, toy)
-    linecolors = [] # list of strings
+    graphs = []
 
     fromx, fromy = 0, 0
-    tox, toy = 290, 100
+    tox, toy = 290000, 100
 
     def __init__(self, root):
         self.root = root
@@ -29,11 +27,17 @@ class Plane:
         self.draw_axes()
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
-    def add_graph(self, points, color):
-        self.init_graphs.append(points)
-        self.linecolors.append(color)
-        self.bounded_graphs.append(self.bound_graph(points))
-        self.draw_graph(self.bounded_graphs[-1], self.linecolors[-1], True)
+    def add_graph(self, graph):
+        if len(self.graphs) == 0:
+            miny = graph.points[0][1]
+            maxy = graph.points[0][1]
+            for pnt in graph.points:
+                miny = min(miny, pnt[1])
+                maxy = max(maxy, pnt[1])
+            self.change_boundaries(graph.x0 - graph.x0*0.1, miny - miny*0.1, graph.tox + graph.tox*0.1, maxy + maxy*0.1)
+
+        self.graphs.append(graph)
+        self.draw_graph(self.bound_graph(graph.points), graph.line_color, True)
 
     def change_boundaries(self, fromx, fromy, tox, toy):
         self.fromx = fromx
@@ -43,17 +47,48 @@ class Plane:
 
         self.canvas.delete('all')
         self.draw_axes()
-        self.bounded_graphs.clear()
-        for i in range(len(self.init_graphs)):
-            self.bounded_graphs.append(self.bound_graph(self.init_graphs[i]))
-            self.draw_graph(self.bounded_graphs[i], self.linecolors[i])
+        for graph in self.graphs:
+            self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
     def update(self, event):
         self.canvas.delete('all')
         self.canvas.config(height=self.root.winfo_width() // 2)
         self.draw_axes()
-        for i in range(len(self.bounded_graphs)):
-            self.draw_graph(self.bounded_graphs[i], self.linecolors[i])
+        for graph in self.graphs:
+            self.draw_graph(self.bound_graph(graph.points), graph.line_color)
+
+    def scaleX(self, x):
+        return (x - self.fromx) * (self.canvas.winfo_width() - 5 - self.shift_OX_right) / (self.tox - self.fromx)
+    def scaleY(self, y):
+        return (y - self.fromy) * (self.canvas.winfo_height() - 5 - self.shift_OY_up) / (self.toy - self.fromy)
+
+    def bound_graph(self, plot):
+        b_plot = list()
+        added = False
+        for i in range(len(plot)):
+            if self.fromx <= plot[i][0] <= self.tox and self.fromy <= plot[i][1] <= self.toy:
+                b_plot.append(plot[i])
+                if not added and i != 0:
+                    b_plot.append(plot[i - 1]) #add previous point if current added
+                added = True
+            elif added:
+                b_plot.append(plot[i]) #add point if previous one was added
+                added = False
+
+        return b_plot
+
+    def draw_graph(self, graph_points, color, animated=False):
+        self.canvas.update()
+        for i in range(1, len(graph_points)):
+            self.canvas.create_line(self.scaleX(graph_points[i - 1][0]) + self.shift_OX_right,
+                                    self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
+                                    self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
+            if animated:
+                time.sleep(1 / len(graph_points))
+                self.canvas.update()
+
+    def convertY(self, y):
+        return self.canvas.winfo_height() - y
 
     def draw_axes(self):
         self.canvas.create_line(self.shift_OX_right - 1, self.convertY(self.shift_OX_up), self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up), width=3,
@@ -141,37 +176,3 @@ class Plane:
                                     fill="white")
             y += dy
             py = self.scaleY(y)
-
-    def scaleX(self, x):
-        return (x - self.fromx) * (self.canvas.winfo_width() - 5 - self.shift_OX_right) / (self.tox - self.fromx)
-
-    def scaleY(self, y):
-        return (y - self.fromy) * (self.canvas.winfo_height() - 5 - self.shift_OY_up) / (self.toy - self.fromy)
-
-    def bound_graph(self, plot):
-        b_plot = list()
-        added = False
-        for i in range(len(plot)):
-            if self.fromx <= plot[i][0] <= self.tox and self.fromy <= plot[i][1] <= self.toy:
-                b_plot.append(plot[i])
-                if not added and i != 0:
-                    b_plot.append(plot[i - 1]) #add previous point if current added
-                added = True
-            elif added:
-                b_plot.append(plot[i]) #add point if previous one was added
-                added = False
-
-        return b_plot
-
-    def draw_graph(self, graph_points, color, animated=False):
-        self.canvas.update()
-        for i in range(1, len(graph_points)):
-            self.canvas.create_line(self.scaleX(graph_points[i - 1][0]) + self.shift_OX_right,
-                                    self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
-                                    self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
-            if animated:
-                time.sleep(1.5 / len(graph_points))
-                self.canvas.update()
-
-    def convertY(self, y):
-        return self.canvas.winfo_height() - y
