@@ -16,7 +16,6 @@ frame_control_graphs = FrameControlGraphs(root, images)
 frame_settings = FrameSettings(root, images)
 frame_graphs = FrameGraphs(root)
 
-
 # def f(x):
 #     return x*x
 #

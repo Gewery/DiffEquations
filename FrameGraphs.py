@@ -26,6 +26,7 @@ class FrameGraphs:
 
         self.frame.bind('<Configure>', self.scroll)
         self.canvas.bind('<Configure>', self.change_window_size)
+        self.canvas.bind_all('<MouseWheel>', self._on_mousewheel)
 
         self.graph_1 = Graph(self.frame)
         self.graph_2 = Graph(self.frame)
@@ -33,6 +34,9 @@ class FrameGraphs:
 
         #b = Button(text="draw", command=self.draw)
         #b.pack()
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def scroll(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
