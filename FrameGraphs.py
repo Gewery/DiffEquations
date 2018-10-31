@@ -29,15 +29,16 @@ class FrameGraphs:
 
         self.graph_1 = Graph(self.frame)
         self.graph_2 = Graph(self.frame)
+        print('created:' + str(self.frame.winfo_height()))
 
         #b = Button(text="draw", command=self.draw)
         #b.pack()
 
     def scroll(self, event):
-        self.canvas.configure(scrollregion=self.canvas.bbox('all'), width=400, height=600)
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
 
     def change_window_size(self, event):
-        self.canvas.itemconfig(self.window, height=self.canvas.winfo_height(), width=self.canvas.winfo_width())
+        self.canvas.itemconfig(self.window, width=self.canvas.winfo_width())
 
     def draw(self):
         dataList = []

@@ -17,6 +17,7 @@ class Graph:
         self.root.update()
         self.canvas = Canvas(root, height=root.winfo_width()//2, bg=self.background_color)
         self.canvas.pack(fill=X, padx=10, pady=10) #TODO change padding to see more graphs
+        self.canvas.pack_propagate(0)
         self.canvas.update()
 
         self.shift_OX_up = 30
@@ -27,7 +28,7 @@ class Graph:
         self.accuracy = 3 #TODO: deal with it
 
         self.draw_axes()
-        #self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
+        self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, points, color):
         self.init_graphs.append(points)
