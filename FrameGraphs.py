@@ -12,7 +12,7 @@ class FrameGraphs:
         topframe = Frame(root, background=self.background_color)
         topframe.pack(fill=BOTH, expand=1)
 
-        self.canvas = Canvas(topframe, background=self.background_color)
+        self.canvas = Canvas(topframe, background=self.background_color, highlightthickness=0)
         self.frame = Frame(self.canvas, background=self.background_color)
         scrollbar = Scrollbar(topframe, orient='vertical', command=self.canvas.yview)
         self.canvas.config(yscrollcommand=scrollbar.set)
@@ -29,7 +29,7 @@ class FrameGraphs:
 
         self.graph_1 = Graph(self.frame)
         self.graph_2 = Graph(self.frame)
-        print('created:' + str(self.frame.winfo_height()))
+        self.graph_3 = Graph(self.frame)
 
         #b = Button(text="draw", command=self.draw)
         #b.pack()

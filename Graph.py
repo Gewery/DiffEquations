@@ -15,8 +15,8 @@ class Graph:
     def __init__(self, root):
         self.root = root
         self.root.update()
-        self.canvas = Canvas(root, height=root.winfo_width()//2, bg=self.background_color)
-        self.canvas.pack(fill=X, padx=10, pady=10) #TODO change padding to see more graphs
+        self.canvas = Canvas(root, height=root.winfo_width()//2, bg=self.background_color, highlightthickness=0.5)
+        self.canvas.pack(fill=X, padx=10, pady=50)
         self.canvas.pack_propagate(0)
         self.canvas.update()
 
