@@ -17,7 +17,7 @@ class FrameGraphs:
         scrollbar = Scrollbar(topframe, orient='vertical', command=self.canvas.yview)
         self.canvas.config(yscrollcommand=scrollbar.set)
 
-        scrollbar.pack(side=RIGHT, fill=Y)
+        #scrollbar.pack(side=RIGHT, fill=Y)  # Hided Scrollbar
         self.canvas.pack(side=LEFT, fill=BOTH, expand=1)
         self.canvas.update()
 
