@@ -16,14 +16,7 @@ frame_control_graphs = FrameControlGraphs(root, images)
 frame_settings = FrameSettings(root, images)
 frame_graphs = FrameGraphs(root)
 
-# def f(x):
-#     return x*x
-#
-# canvas = Canvas(gui, width=300, height=300)
-# canvas.pack()
-#
-# for i in range(1000):
-#     x = -100 + 0.2*i
-#     line = canvas.create_line(150 + 10*(x-0.2), 300-f(x-0.2), 150 + 10*x, 300-f(x), fill="blue")
+frame_control_graphs.set_frame_graphs(frame_graphs)
+frame_settings.set_frame_graphs(frame_graphs)
 
 root.mainloop()

@@ -1,7 +1,10 @@
 from tkinter import *
+from Calculations.CalculationMethod import CalculationMethod
+from Calculations.ExactSolution import ExactSolution
+
 #from Graph import Graph
 import math
-from Graph import Graph
+from Plane import Plane
 
 
 class FrameGraphs:
@@ -28,12 +31,12 @@ class FrameGraphs:
         self.canvas.bind('<Configure>', self.change_window_size)
         self.canvas.bind_all('<MouseWheel>', self._on_mousewheel)
 
-        self.graph_1 = Graph(self.frame)
-        self.graph_2 = Graph(self.frame)
-        self.graph_3 = Graph(self.frame)
+        self.function_plane = Plane(self.frame)
+        self.local_error_plane = Plane(self.frame)
+        self.global_error_plane = Plane(self.frame)
 
-        #b = Button(text="draw", command=self.draw)
-        #b.pack()
+        b = Button(text="draw", command=self.draw)
+        b.pack()
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
@@ -45,16 +48,7 @@ class FrameGraphs:
         self.canvas.itemconfig(self.window, width=self.canvas.winfo_width())
 
     def draw(self):
-        dataList = []
-        x = 0
-        for i in range(100):
-            dataList.append((x, 1 + math.sin(x)))
-            x += 0.1
+        es = ExactSolution()
 
-        self.graph_1.change_boundaries(0, 0, 10, 2.5)
-        self.graph_1.add_graph(dataList, "blue")
-
-    def resize_graphs(self):
-        pass
-        #self.graph_1.draw_piece()
-        #self.graph_2.draw_piece()
+        self.function_plane.change_boundaries(1, 0, 10, 7)
+        self.function_plane.add_graph(es.calculate(1, 9.5, 0.1), 'red')

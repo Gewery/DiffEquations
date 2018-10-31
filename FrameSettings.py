@@ -17,3 +17,6 @@ class FrameSettings:
                                  state="normal",
                                  activebackground=self.background_color)
         button_settings.pack(pady=10)
+
+    def set_frame_graphs(self, frame_graphs):
+        self.frame_graphs = frame_graphs
