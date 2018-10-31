@@ -16,7 +16,7 @@ class Graph:
         self.root = root
         self.root.update()
         self.canvas = Canvas(root, height=int(root.winfo_width()//2), bg=self.background_color)
-        self.canvas.pack(fill=X, padx=10, pady=70) #TODO change padding to see more graphs
+        self.canvas.pack(fill=X, padx=10, pady=10) #TODO change padding to see more graphs
         self.canvas.update()
 
         self.shift_OX_up = 30

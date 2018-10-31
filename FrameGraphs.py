@@ -12,35 +12,30 @@ class FrameGraphs:
         topframe = Frame(root, background=self.background_color)
         topframe.pack(fill=BOTH, expand=1)
 
-        scrollbar = Scrollbar(topframe, orient='vertical')
-        scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas = Canvas(topframe, background=self.background_color)
+        self.frame = Frame(self.canvas, background='yellow')
+        scrollbar = Scrollbar(topframe, orient='vertical', command=self.canvas.yview)
+        self.canvas.config(yscrollcommand=scrollbar.set)
 
-        self.canvas = Canvas(topframe, yscrollcommand=scrollbar.set, borderwidth=0, highlightthickness=0, background=self.background_color)
+        scrollbar.pack(side=RIGHT, fill=Y)
         self.canvas.pack(side=LEFT, fill=BOTH, expand=1)
 
-        scrollbar.config(command=self.canvas.yview)
-
-        self.canvas.xview_moveto(0)
-        self.canvas.yview_moveto(0)
-
-        self.frame = Frame(self.canvas, background=self.background_color)
-        # self.frame.pack(fill=BOTH, expand=1)
-        # self.frame.pack_propagate(0)
-
         self.canvas.update()
-        self.window = self.canvas.create_window((0, 0), window=self.frame, anchor=NW, height=self.canvas.winfo_height(), width=self.canvas.winfo_width())
+        self.window = self.canvas.create_window((0, 0), window=self.frame, anchor=NW, width=self.canvas.winfo_width())
+
+        self.frame.bind('<Configure>', self.scroll)
         self.canvas.bind('<Configure>', self.change_window_size)
 
-        self.canvas.update()
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-        self.graph_1 = Graph(self.frame)
+        #self.graph_1 = Graph(self.frame)
         #self.graph_2 = Graph(self.frame)
+        for i in range(100):
+            Label(self.frame, text=i).pack()
 
         #b = Button(text="draw", command=self.draw)
         #b.pack()
-        #self.graph_2 = Graph(frame, dataList, "red")
-        #self.graph_3 = Graph(frame, dataList, "red")
+
+    def scroll(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'), width=400, height=600)
 
     def change_window_size(self, event):
         self.canvas.itemconfig(self.window, height=self.canvas.winfo_height(), width=self.canvas.winfo_width())
