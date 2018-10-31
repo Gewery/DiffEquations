@@ -13,23 +13,22 @@ class FrameGraphs:
         topframe.pack(fill=BOTH, expand=1)
 
         self.canvas = Canvas(topframe, background=self.background_color)
-        self.frame = Frame(self.canvas, background='yellow')
+        self.frame = Frame(self.canvas, background=self.background_color)
         scrollbar = Scrollbar(topframe, orient='vertical', command=self.canvas.yview)
         self.canvas.config(yscrollcommand=scrollbar.set)
 
         scrollbar.pack(side=RIGHT, fill=Y)
         self.canvas.pack(side=LEFT, fill=BOTH, expand=1)
-
         self.canvas.update()
+
+        self.frame.config(height=self.canvas.winfo_height(), width=self.canvas.winfo_width())
         self.window = self.canvas.create_window((0, 0), window=self.frame, anchor=NW, width=self.canvas.winfo_width())
 
         self.frame.bind('<Configure>', self.scroll)
         self.canvas.bind('<Configure>', self.change_window_size)
 
-        #self.graph_1 = Graph(self.frame)
-        #self.graph_2 = Graph(self.frame)
-        for i in range(100):
-            Label(self.frame, text=i).pack()
+        self.graph_1 = Graph(self.frame)
+        self.graph_2 = Graph(self.frame)
 
         #b = Button(text="draw", command=self.draw)
         #b.pack()
