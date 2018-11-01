@@ -7,10 +7,10 @@ class Graph:
 
     exact_solution = None # for local errors
 
-    step = 0.6
+    step = 0.1
     x0 = 1
     y0 = 1
-    tox = 9.5
+    tox = 100
 
     method = None
     plane = None
@@ -21,6 +21,8 @@ class Graph:
         self.method = method
         self.__calculate_points()
         self.line_color = line_color
+
+    def draw_graph(self):
         self.plane.add_graph(self)
 
     def __calculate_points(self):

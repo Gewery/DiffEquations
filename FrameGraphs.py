@@ -47,8 +47,7 @@ class FrameGraphs:
         self.local_error_plane = Plane(self.frame)
         self.global_error_plane = Plane(self.frame)
 
-        b = Button(text="draw", command=self.draw)
-        b.pack()
+        self.create_graphs()
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
@@ -59,17 +58,33 @@ class FrameGraphs:
     def change_window_size(self, event):
         self.canvas.itemconfig(self.window, width=self.canvas.winfo_width())
 
-    def draw(self):
-        exact_solution_function_graph = Graph(self.function_plane, ExactSolution(), 'red')
+    def draw_exact_solution_graph(self):
+        self.exact_solution_function_graph.draw_graph()
 
-        euler_function_graph = Graph(self.function_plane, Euler(), 'blue')
+    def draw_euler_graphs(self):
+        self.euler_function_graph.draw_graph()
+        self.euler_local_error_graph.draw_graph()
+
+    def draw_improved_euler_graphs(self):
+        self.improved_euler_function_graph.draw_graph()
+        self.improved_euler_local_error_graph.draw_graph()
+
+    def draw_runge_kutta_graphs(self):
+        self.runge_kutta_function_graph.draw_graph()
+        self.runge_kutta_local_error_graph.draw_graph()
+
+    def create_graphs(self):
+        self.exact_solution_function_graph = Graph(self.function_plane, ExactSolution(), 'white')
+
+        self.euler_function_graph = Graph(self.function_plane, Euler(), 'blue')
+        self.euler_local_error_graph = Graph(self.local_error_plane, EulerLocalError(), 'blue', self.exact_solution_function_graph.points)
         # euler_global_error_graph = Graph(self.global_error_plane, EulerGlobalError(), 'blue')
 
-        improved_euler_function_graph = Graph(self.function_plane, ImprovedEuler(), 'yellow')
+        self.improved_euler_function_graph = Graph(self.function_plane, ImprovedEuler(), 'yellow')
+        self.improved_euler_local_error_graph = Graph(self.local_error_plane, ImprovedEulerLocalError(), 'yellow', self.exact_solution_function_graph.points)
 
 
-
-        euler_local_error_graph = Graph(self.local_error_plane, EulerLocalError(), 'blue', exact_solution_function_graph.points)
-        improved_euler_local_error_graph = Graph(self.local_error_plane, ImprovedEulerLocalError(), 'yellow', exact_solution_function_graph.points)
+        self.runge_kutta_function_graph = Graph(self.function_plane, RungeKutta(), 'red')
+        self.runge_kutta_local_error_graph = Graph(self.local_error_plane, RungeKuttaLocalError(), 'red', self.exact_solution_function_graph.points)
 
 

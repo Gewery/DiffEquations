@@ -93,7 +93,7 @@ class Plane:
                                     self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
                                     self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
             if animated:
-                time.sleep(1 / len(graph_points))
+                time.sleep(0.5 / len(graph_points))
                 self.canvas.update()
 
     def convertY(self, y):
