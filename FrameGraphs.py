@@ -23,6 +23,14 @@ class FrameGraphs:
 
     background_color = "#20232a"
 
+    exact_solution_function_graph = None
+    euler_function_graph = None
+    euler_local_error_graph = None
+    improved_euler_function_graph = None
+    improved_euler_local_error_graph = None
+    runge_kutta_function_graph = None
+    runge_kutta_local_error_graph = None
+
     def __init__(self, root):
         topframe = Frame(root, background=self.background_color)
         topframe.pack(fill=BOTH, expand=1)
@@ -43,9 +51,9 @@ class FrameGraphs:
         self.canvas.bind('<Configure>', self.change_window_size)
         self.canvas.bind_all('<MouseWheel>', self._on_mousewheel)
 
-        self.function_plane = Plane(self.frame)
-        self.local_error_plane = Plane(self.frame)
-        self.global_error_plane = Plane(self.frame)
+        self.function_plane = Plane(self.frame, 'Function')
+        self.local_error_plane = Plane(self.frame, 'Local error')
+        self.global_error_plane = Plane(self.frame, 'Total error')
 
         self.create_graphs()
 

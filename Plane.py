@@ -5,11 +5,12 @@ import time, math
 class Plane:
     background_color = "#20232a"
     graphs = None
+    text = 'Plane'
 
     fromx, fromy = 0, 0
     tox, toy = 290000, 100
 
-    def __init__(self, root):
+    def __init__(self, root, text):
         self.root = root
         self.root.update()
         self.canvas = Canvas(root, height=root.winfo_width()//2, bg=self.background_color, highlightthickness=0.5)
@@ -17,6 +18,10 @@ class Plane:
         self.canvas.pack_propagate(0)
         self.canvas.update()
         self.graphs = []
+        self.text = text
+
+        self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=text,
+                                font=('Impact', 80), fill="#242B32")
 
         self.shift_OX_up = 30
         self.shift_OX_right = 30
@@ -29,7 +34,6 @@ class Plane:
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, graph):
-        print(self, self.graphs)
         changed = False
         if len(self.graphs) == 0:
             self.fromy = graph.points[0][1]
@@ -55,12 +59,16 @@ class Plane:
         self.toy = toy
 
         self.canvas.delete('all')
+        self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
+                                font=('Impact', 80), fill="#242B32")
         self.draw_axes()
         for graph in self.graphs:
             self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
     def update(self, event):
         self.canvas.delete('all')
+        self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
+                                font=('Impact', 80), fill="#242B32")
         self.canvas.config(height=self.root.winfo_width() // 2)
         self.draw_axes()
         for graph in self.graphs:
@@ -93,7 +101,7 @@ class Plane:
                                     self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
                                     self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
             if animated:
-                time.sleep(0.5 / len(graph_points))
+                #time.sleep(0.5 / len(graph_points))
                 self.canvas.update()
 
     def convertY(self, y):

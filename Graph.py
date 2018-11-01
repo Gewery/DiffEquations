@@ -7,10 +7,10 @@ class Graph:
 
     exact_solution = None # for local errors
 
-    step = 0.1
+    step = 0.6
     x0 = 1
     y0 = 1
-    tox = 100
+    tox = 10
 
     method = None
     plane = None
