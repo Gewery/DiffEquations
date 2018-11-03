@@ -81,6 +81,22 @@ class FrameGraphs:
         self.runge_kutta_function_graph.draw_graph()
         self.runge_kutta_local_error_graph.draw_graph()
 
+    def change_graphs_settings(self, kwargs):
+        self.exact_solution_function_graph.change_graph_settings(kwargs)
+        kwargs['exact_solution'] = self.exact_solution_function_graph.points
+
+        self.euler_function_graph.change_graph_settings(kwargs)
+        self.euler_local_error_graph.change_graph_settings(kwargs)
+        self.improved_euler_function_graph.change_graph_settings(kwargs)
+        self.improved_euler_local_error_graph.change_graph_settings(kwargs)
+        self.runge_kutta_function_graph.change_graph_settings(kwargs)
+        self.runge_kutta_local_error_graph.change_graph_settings(kwargs)
+
+
+        self.function_plane.update()
+        self.local_error_plane.update()
+        self.global_error_plane.update()
+
     def create_graphs(self):
         self.exact_solution_function_graph = Graph(self.function_plane, ExactSolution(), 'white')
 

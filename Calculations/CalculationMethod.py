@@ -1,3 +1,3 @@
 class CalculationMethod:
-    def calculate(self, fromx, tox, step):
+    def calculate(self, fromx, tox, h):
         pass

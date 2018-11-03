@@ -3,16 +3,16 @@ import math
 
 
 class EulerLocalError(CalculationMethod):
-    def calculate(self, x0, y0, tox, step, **kwargs):
+    def calculate(self, x0, y0, tox, h, **kwargs):
+        #print(kwargs['exact_solution'])
         points = []
-        points.append((x0, 0))
         x = x0
         y = y0
-        i = 1
+        i = 0
         while x <= tox:
-            y = y + step * self.__func(x, y)
-            x += step
             points.append((x, kwargs['exact_solution'][i][1] - y))
+            y = y + h * self.__func(x, y)
+            x += h
             i += 1
 
         return points

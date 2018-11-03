@@ -6,7 +6,7 @@ from Images import Images
 
 
 root = Tk()
-root.geometry("1000x600")
+root.geometry("1000x600+350+50")
 root.configure(background="#20232a")
 root.title("Karachev_top")
 

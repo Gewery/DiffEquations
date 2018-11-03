@@ -6,6 +6,7 @@ class Plane:
     background_color = "#20232a"
     graphs = None
     text = 'Plane'
+    zoomed = False
 
     fromx, fromy = 0, 0
     tox, toy = 290000, 100
@@ -20,11 +21,11 @@ class Plane:
         self.graphs = []
         self.text = text
 
-        self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=text,
-                                font=('Impact', 80), fill="#242B32")
+        self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
+                                font=('Impact', int(self.canvas.winfo_width() / 8)), fill="#242B32")
 
         self.shift_OX_up = 30
-        self.shift_OX_right = 30
+        self.shift_OX_right = 50
         self.shift_OY_up = self.shift_OX_up
         self.shift_OY_right = self.shift_OX_right
 
@@ -60,22 +61,42 @@ class Plane:
 
         self.canvas.delete('all')
         self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
-                                font=('Impact', 80), fill="#242B32")
+                                font=('Impact', int(self.canvas.winfo_width() / 8)), fill="#242B32")
         self.draw_axes()
         for graph in self.graphs:
             self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
-    def update(self, event):
+    def update(self, event=None):
         self.canvas.delete('all')
         self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
-                                font=('Impact', 80), fill="#242B32")
+                                font=('Impact', int(self.canvas.winfo_width() / 8)), fill="#242B32")
         self.canvas.config(height=self.root.winfo_width() // 2)
+
+        if not self.zoomed:
+            if len(self.graphs) != 0:
+                self.fromy = self.graphs[0].points[0][1]
+                self.toy = self.graphs[0].points[0][1]
+                for graph in self.graphs:
+                    for pnt in graph.points:
+                        if pnt[1] < self.fromy:
+                            self.fromy = pnt[1]
+                        if pnt[1] > self.toy:
+                            self.toy = pnt[1]
+
+                self.change_boundaries(self.graphs[0].x0 - abs(self.graphs[0].x0 * 0.1), self.fromy - abs(self.fromy * 0.1),
+                                       self.graphs[0].tox + self.graphs[0].tox * 0.1, self.toy + abs(self.toy * 0.1))
+                #print(self.graphs[0].x0 - abs(self.graphs[0].x0 * 0.1), self.fromy - abs(self.fromy * 0.1),
+                #                       self.graphs[0].tox + self.graphs[0].tox * 0.1, self.toy + abs(self.toy * 0.1))
+                #print(self.graphs[0].tox)
+                #print(self.graphs)
+
         self.draw_axes()
         for graph in self.graphs:
             self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
     def scaleX(self, x):
         return (x - self.fromx) * (self.canvas.winfo_width() - 5 - self.shift_OX_right) / (self.tox - self.fromx)
+
     def scaleY(self, y):
         return (y - self.fromy) * (self.canvas.winfo_height() - 5 - self.shift_OY_up) / (self.toy - self.fromy)
 
@@ -101,7 +122,8 @@ class Plane:
                                     self.convertY(self.scaleY(graph_points[i - 1][1]) + self.shift_OX_up), self.scaleX(graph_points[i][0]) + self.shift_OX_right,
                                     self.convertY(self.scaleY(graph_points[i][1]) + self.shift_OX_up), fill=color, width=2)
             if animated:
-                #time.sleep(0.5 / len(graph_points))
+                if len(graph_points) < 100:
+                    time.sleep(0.5 / len(graph_points))
                 self.canvas.update()
 
     def convertY(self, y):
@@ -125,7 +147,7 @@ class Plane:
                                 fill="white")
 
         #Mark OX:
-        dist_text_from_OX = 12
+        dist_text_from_OX = 17
 
         integer = True
         n = 15
@@ -160,7 +182,7 @@ class Plane:
 
         # Mark OY:
 
-        dist_text_from_OY = 15
+        dist_text_from_OY = 25
 
         integer = True
         n = 10

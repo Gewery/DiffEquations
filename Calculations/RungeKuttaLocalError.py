@@ -3,20 +3,19 @@ import math
 
 
 class RungeKuttaLocalError(CalculationMethod):
-    def calculate(self, x0, y0, tox, step, **kwargs):
+    def calculate(self, x0, y0, tox, h, **kwargs):
         points = []
-        points.append((x0, 0))
         x = x0
         y = y0
-        i = 1
+        i = 0
         while x <= tox:
-            k1 = self.__func(x, y)
-            k2 = self.__func(x + step/2, y + step*k1/2)
-            k3 = self.__func(x + step/2, y + step*k2/2)
-            k4 = self.__func(x + step, y + step * k3)
-            y = y + (k1 + 2 * k2 + 2 * k3 + k4) * step / 6
-            x = x + step
             points.append((x, kwargs['exact_solution'][i][1] - y))
+            k1 = self.__func(x, y)
+            k2 = self.__func(x + h/2, y + h*k1/2)
+            k3 = self.__func(x + h/2, y + h*k2/2)
+            k4 = self.__func(x + h, y + h * k3)
+            y = y + (k1 + 2 * k2 + 2 * k3 + k4) * h / 6
+            x = x + h
             i += 1
 
         return points

@@ -7,7 +7,7 @@ class Graph:
 
     exact_solution = None # for local errors
 
-    step = 0.6
+    h = 0.6
     x0 = 1
     y0 = 1
     tox = 10
@@ -26,11 +26,12 @@ class Graph:
         self.plane.add_graph(self)
 
     def __calculate_points(self):
-        self.points = self.method.calculate(self.x0, self.y0, self.tox, self.step, exact_solution=self.exact_solution)
+        self.points = self.method.calculate(self.x0, self.y0, self.tox, self.h, exact_solution=self.exact_solution)
 
-    def change_graph_settings(self, **kwargs):  # update planes after call this
+    def change_graph_settings(self, kwargs):  # update planes after call this
+        if 'exact_solution' in kwargs: self.exact_solution = kwargs['exact_solution']
         if 'x0' in kwargs: self.x0 = kwargs['x0']
         if 'y0' in kwargs: self.y0 = kwargs['y0']
-        if 'step' in kwargs: self.step = kwargs['step']
+        if 'h' in kwargs: self.h = kwargs['h']
         if 'tox' in kwargs: self.tox = kwargs['tox']
         self.__calculate_points()
