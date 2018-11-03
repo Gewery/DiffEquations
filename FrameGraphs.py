@@ -72,20 +72,38 @@ class FrameGraphs:
     def draw_exact_solution_graph(self):
         self.exact_solution_function_graph.draw_graph()
 
+    def remove_exact_solution_graph(self):
+        self.exact_solution_function_graph.remove_graph()
+
     def draw_euler_graphs(self):
         self.euler_function_graph.draw_graph()
         self.euler_local_error_graph.draw_graph()
         self.euler_global_error_graph.draw_graph()
+
+    def remove_euler_graphs(self):
+        self.euler_function_graph.remove_graph()
+        self.euler_local_error_graph.remove_graph()
+        self.euler_global_error_graph.remove_graph()
 
     def draw_improved_euler_graphs(self):
         self.improved_euler_function_graph.draw_graph()
         self.improved_euler_local_error_graph.draw_graph()
         self.improved_euler_global_error_graph.draw_graph()
 
+    def remove_improved_euler_graphs(self):
+        self.improved_euler_function_graph.remove_graph()
+        self.improved_euler_local_error_graph.remove_graph()
+        self.improved_euler_global_error_graph.remove_graph()
+
     def draw_runge_kutta_graphs(self):
         self.runge_kutta_function_graph.draw_graph()
         self.runge_kutta_local_error_graph.draw_graph()
         self.runge_kutta_global_error_graph.draw_graph()
+
+    def remove_runge_kutta_graphs(self):
+        self.runge_kutta_function_graph.remove_graph()
+        self.runge_kutta_local_error_graph.remove_graph()
+        self.runge_kutta_global_error_graph.remove_graph()
 
     def change_graphs_settings(self, kwargs):
         self.exact_solution_function_graph.change_graph_settings(kwargs)

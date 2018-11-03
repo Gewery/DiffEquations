@@ -28,6 +28,9 @@ class Graph:
     def draw_graph(self):
         self.plane.add_graph(self)
 
+    def remove_graph(self):
+        self.plane.remove_graph(self)
+
     def __calculate_points(self):
         self.points = self.method.calculate(self.x0, self.y0, self.tox, self.h, exact_solution=self.exact_solution,
                                             min_division=self.min_division, max_division=self.max_division)

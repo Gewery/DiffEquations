@@ -55,6 +55,25 @@ class Plane:
         self.graphs.append(graph)
         self.draw_graph(self.bound_graph(graph.points), graph.line_color, True)
 
+    def remove_graph(self, graph):
+        for i in self.graphs:
+            if graph.__eq__(self.graphs):
+                self.graphs.remove(graph)
+                break
+        if not self.zoomed and len(self.graphs) != 0:
+            changed = False
+            for pnt in graph.points:
+                if pnt[1] < self.fromy:
+                    self.fromy = pnt[1]
+                    changed = True
+                if pnt[1] > self.toy:
+                    self.toy = pnt[1]
+                    changed = True
+            if changed:
+                self.change_boundaries(graph.points[0][0], self.fromy, graph.points[-1][0] + graph.points[-1][0] * 0.1,
+                                       self.toy + abs(self.toy * 0.1))
+        self.update()
+
     def change_boundaries(self, fromx, fromy, tox, toy):
         self.fromx = fromx
         self.fromy = fromy
