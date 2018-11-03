@@ -9,7 +9,7 @@ class Plane:
     zoomed = False
 
     fromx, fromy = 0, 0
-    tox, toy = 290000, 100
+    tox, toy = 100, 100
 
     def __init__(self, root, text):
         self.root = root
@@ -35,20 +35,21 @@ class Plane:
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, graph):
-        changed = False
-        if len(self.graphs) == 0:
-            self.fromy = graph.points[0][1]
-            self.toy = graph.points[0][1]
-            changed = True
-        for pnt in graph.points:
-            if pnt[1] < self.fromy:
-                self.fromy = pnt[1]
+        if not self.zoomed or len(self.graphs) == 0:
+            changed = False
+            if len(self.graphs) == 0:
+                self.fromy = graph.points[0][1]
+                self.toy = graph.points[0][1]
                 changed = True
-            if pnt[1] > self.toy:
-                self.toy = pnt[1]
-                changed = True
-        if changed:
-            self.change_boundaries(graph.x0 - abs(graph.x0*0.1), self.fromy - abs(self.fromy*0.1), graph.tox + graph.tox*0.1, self.toy + abs(self.toy*0.1))
+            for pnt in graph.points:
+                if pnt[1] < self.fromy:
+                    self.fromy = pnt[1]
+                    changed = True
+                if pnt[1] > self.toy:
+                    self.toy = pnt[1]
+                    changed = True
+            if changed:
+                self.change_boundaries(graph.points[0][0], self.fromy, graph.points[-1][0] + graph.points[-1][0]*0.1, self.toy + abs(self.toy*0.1))
 
         self.graphs.append(graph)
         self.draw_graph(self.bound_graph(graph.points), graph.line_color, True)
@@ -66,31 +67,27 @@ class Plane:
         for graph in self.graphs:
             self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
-    def update(self, event=None):
+    def update(self, event=None): # used when settings of graphs or size of window has changed
         self.canvas.delete('all')
         self.canvas.create_text(self.canvas.winfo_width() // 2, self.canvas.winfo_height() // 2, text=self.text,
                                 font=('Impact', int(self.canvas.winfo_width() / 8)), fill="#242B32")
         self.canvas.config(height=self.root.winfo_width() // 2)
 
-        if not self.zoomed:
-            if len(self.graphs) != 0:
-                self.fromy = self.graphs[0].points[0][1]
-                self.toy = self.graphs[0].points[0][1]
-                for graph in self.graphs:
-                    for pnt in graph.points:
-                        if pnt[1] < self.fromy:
-                            self.fromy = pnt[1]
-                        if pnt[1] > self.toy:
-                            self.toy = pnt[1]
+        if not self.zoomed and len(self.graphs) != 0:
+            self.fromy = self.graphs[0].points[0][1]
+            self.toy = self.graphs[0].points[0][1]
+            for graph in self.graphs:
+                for pnt in graph.points:
+                    if pnt[1] < self.fromy:
+                        self.fromy = pnt[1]
+                    if pnt[1] > self.toy:
+                        self.toy = pnt[1]
 
-                self.change_boundaries(self.graphs[0].x0 - abs(self.graphs[0].x0 * 0.1), self.fromy - abs(self.fromy * 0.1),
-                                       self.graphs[0].tox + self.graphs[0].tox * 0.1, self.toy + abs(self.toy * 0.1))
-                #print(self.graphs[0].x0 - abs(self.graphs[0].x0 * 0.1), self.fromy - abs(self.fromy * 0.1),
-                #                       self.graphs[0].tox + self.graphs[0].tox * 0.1, self.toy + abs(self.toy * 0.1))
-                #print(self.graphs[0].tox)
-                #print(self.graphs)
-
-        self.draw_axes()
+            self.change_boundaries(self.graphs[0].points[0][0], self.fromy,
+                                   self.graphs[0].points[-1][0] + self.graphs[0].points[-1][0] * 0.1,
+                                   self.toy + abs(self.toy * 0.1))  # do not need if size of window changed
+        else:
+            self.draw_axes()
         for graph in self.graphs:
             self.draw_graph(self.bound_graph(graph.points), graph.line_color)
 
@@ -130,6 +127,7 @@ class Plane:
         return self.canvas.winfo_height() - y
 
     def draw_axes(self):
+        self.canvas.update()
         self.canvas.create_line(self.shift_OX_right - 1, self.convertY(self.shift_OX_up), self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up), width=3,
                                 fill="white")# OX axis
         self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up - 1), self.canvas.winfo_width() - 5 - 10,
@@ -171,14 +169,13 @@ class Plane:
 
         self.accuracy = 3 # to 3rd number after .
 
-        px = self.shift_OX_right + self.scaleX(first_mark_ox - self.fromx) # calculate x in pixels
+        px = self.shift_OX_right + self.scaleX(first_mark_ox) # calculate x in pixels
         x = first_mark_ox
         while px < self.canvas.winfo_width() - 5:
             self.canvas.create_line(px, self.convertY(self.shift_OX_up - 5), px, self.convertY(self.shift_OX_up + 5), width=1, fill="white")
             self.canvas.create_text(px, self.convertY(self.shift_OX_up - dist_text_from_OX), text=int(x) if integer else int(x*(10**self.accuracy))/(10**self.accuracy), fill="white")
             x += dx
-            px = self.scaleX(x)
-
+            px = self.shift_OX_right + self.scaleX(x)
 
         # Mark OY:
 
@@ -206,7 +203,7 @@ class Plane:
 
         self.accuracy = 3  # to 3rd number after .
 
-        py = self.shift_OY_up + self.scaleY(first_mark_oy - self.fromy) # calculate y in pixels
+        py = self.shift_OY_up + self.scaleY(first_mark_oy) # calculate y in pixels
         y = first_mark_oy
         while py < self.canvas.winfo_width() - 5:
             self.canvas.create_line(self.shift_OY_right - 5, self.convertY(py), self.shift_OX_right + 5, self.convertY(py), width=1, fill="white")
@@ -214,4 +211,4 @@ class Plane:
                                     text=int(y) if integer else int(y * (10 ** self.accuracy)) / (10 ** self.accuracy),# rounding
                                     fill="white")
             y += dy
-            py = self.scaleY(y)
+            py = self.shift_OY_up + self.scaleY(y)
