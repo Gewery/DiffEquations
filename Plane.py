@@ -35,21 +35,22 @@ class Plane:
         self.canvas.bind('<Configure>', self.update) # Redraw if size of window has changed
 
     def add_graph(self, graph):
-        if not self.zoomed or len(self.graphs) == 0:
-            changed = False
-            if len(self.graphs) == 0:
-                self.fromy = graph.points[0][1]
-                self.toy = graph.points[0][1]
-                changed = True
-            for pnt in graph.points:
-                if pnt[1] < self.fromy:
-                    self.fromy = pnt[1]
+        if len(graph.points) != 0:
+            if not self.zoomed or len(self.graphs) == 0:
+                changed = False
+                if len(self.graphs) == 0:
+                    self.fromy = graph.points[0][1]
+                    self.toy = graph.points[0][1]
                     changed = True
-                if pnt[1] > self.toy:
-                    self.toy = pnt[1]
-                    changed = True
-            if changed:
-                self.change_boundaries(graph.points[0][0], self.fromy, graph.points[-1][0] + graph.points[-1][0]*0.1, self.toy + abs(self.toy*0.1))
+                for pnt in graph.points:
+                    if pnt[1] < self.fromy:
+                        self.fromy = pnt[1]
+                        changed = True
+                    if pnt[1] > self.toy:
+                        self.toy = pnt[1]
+                        changed = True
+                if changed:
+                    self.change_boundaries(graph.points[0][0], self.fromy, graph.points[-1][0] + graph.points[-1][0]*0.1, self.toy + abs(self.toy*0.1))
 
         self.graphs.append(graph)
         self.draw_graph(self.bound_graph(graph.points), graph.line_color, True)
@@ -73,7 +74,7 @@ class Plane:
                                 font=('Impact', int(self.canvas.winfo_width() / 8)), fill="#242B32")
         self.canvas.config(height=self.root.winfo_width() // 2)
 
-        if not self.zoomed and len(self.graphs) != 0:
+        if not self.zoomed and len(self.graphs) != 0 and len(self.graphs[0].points) != 0:
             self.fromy = self.graphs[0].points[0][1]
             self.toy = self.graphs[0].points[0][1]
             for graph in self.graphs:

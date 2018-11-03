@@ -3,11 +3,10 @@ import math
 
 
 class ExactSolution(CalculationMethod):
-
     const = 1
 
     def calculate(self, x0, y0, tox, h, **kwargs):
-        if x0 > tox: return []
+        if x0 >= tox: return []
         self.const = self.__calculate_const(x0, y0) # const = 0.8402572149116814
         points = []
         x = x0

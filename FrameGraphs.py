@@ -80,10 +80,12 @@ class FrameGraphs:
     def draw_improved_euler_graphs(self):
         self.improved_euler_function_graph.draw_graph()
         self.improved_euler_local_error_graph.draw_graph()
+        self.improved_euler_global_error_graph.draw_graph()
 
     def draw_runge_kutta_graphs(self):
         self.runge_kutta_function_graph.draw_graph()
         self.runge_kutta_local_error_graph.draw_graph()
+        self.runge_kutta_global_error_graph.draw_graph()
 
     def change_graphs_settings(self, kwargs):
         self.exact_solution_function_graph.change_graph_settings(kwargs)
@@ -94,8 +96,10 @@ class FrameGraphs:
         self.euler_global_error_graph.change_graph_settings(kwargs)
         self.improved_euler_function_graph.change_graph_settings(kwargs)
         self.improved_euler_local_error_graph.change_graph_settings(kwargs)
+        self.improved_euler_global_error_graph.change_graph_settings(kwargs)
         self.runge_kutta_function_graph.change_graph_settings(kwargs)
         self.runge_kutta_local_error_graph.change_graph_settings(kwargs)
+        self.runge_kutta_global_error_graph.change_graph_settings(kwargs)
 
         self.function_plane.update()
         self.local_error_plane.update()
@@ -110,8 +114,8 @@ class FrameGraphs:
 
         self.improved_euler_function_graph = Graph(self.function_plane, ImprovedEuler(), 'yellow')
         self.improved_euler_local_error_graph = Graph(self.local_error_plane, ImprovedEulerLocalError(), 'yellow', self.exact_solution_function_graph.points)
+        self.improved_euler_global_error_graph = Graph(self.global_error_plane, ImprovedEulerGlobalError(), 'yellow')
 
         self.runge_kutta_function_graph = Graph(self.function_plane, RungeKutta(), 'red')
         self.runge_kutta_local_error_graph = Graph(self.local_error_plane, RungeKuttaLocalError(), 'red', self.exact_solution_function_graph.points)
-
-
+        self.runge_kutta_global_error_graph = Graph(self.global_error_plane, RungeKuttaGlobalError(), 'red')

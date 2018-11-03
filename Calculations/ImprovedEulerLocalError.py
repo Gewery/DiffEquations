@@ -4,7 +4,7 @@ import math
 
 class ImprovedEulerLocalError(CalculationMethod):
     def calculate(self, x0, y0, tox, h, **kwargs):
-        if x0 > tox: return []
+        if x0 >= tox: return []
         points = []
         x = x0
         y = y0
