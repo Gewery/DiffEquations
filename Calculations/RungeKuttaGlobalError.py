@@ -6,7 +6,6 @@ from Calculations.ExactSolution import ExactSolution
 class RungeKuttaGlobalError(CalculationMethod):
     def calculate(self, x0, y0, tox, h, **kwargs):
         if x0 >= tox: return []
-        print(kwargs['max_division'])
         points = []
 
         div = kwargs['min_division']
