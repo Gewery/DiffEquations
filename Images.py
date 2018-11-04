@@ -22,3 +22,13 @@ class Images:
         settings_label_image = settings_label_image.resize((settings_label_width, settings_label_height),
                                                              Image.ANTIALIAS)
         self.label_settings_PhotoImage = ImageTk.PhotoImage(settings_label_image)
+
+        '''SETTINGS N'''
+
+        settings_N_width = 50
+        settings_N_height = 250
+
+        settings_N_image = Image.open("ProjectImages/settings_N.png")
+        settings_N_image = settings_N_image.resize((settings_N_width, settings_N_height), Image.ANTIALIAS)
+
+        self.settings_N_PhotoImage = ImageTk.PhotoImage(settings_N_image)

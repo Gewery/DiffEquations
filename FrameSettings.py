@@ -67,17 +67,20 @@ class FrameSettings:
         self.string_tox.trace("w",
                               lambda name, index, mode, s_tox=self.string_tox: self.change_graph_settings(tox=s_tox))
 
-        button_reset = Button(self.frame, text='Reset', font=('impact', 13), command=self.reset_settings,
-                              background='blue')
-        button_reset.pack()
 
-        label_n = Label(self.frame, text='n')
-        label_n.pack()
-        string_n = StringVar()
-        string_n.set('25')
-        entry_n = Entry(self.frame, textvariable=string_n)
-        entry_n.pack()
-        string_n.trace("w", lambda name, index, mode, s_n=string_n: self.change_graph_settings(n=s_n))
+        self.canvas_N = Canvas(self.frame, background=self.background_color, highlightthickness=0, height=250)
+        self.canvas_N.pack()
+
+        self.canvas_N.update()
+        self.scale_N_fill = self.canvas_N.create_rectangle((0+25, self.canvas_N.winfo_height()-4), (49+25, 216), fill='white')
+
+        scale = self.canvas_N.create_image(25, 0, anchor=NW, image=images.settings_N_PhotoImage)
+
+        self.canvas_N.tag_bind(scale, '<Button-1>', self.change_N)
+        self.text_N = self.canvas_N.create_text(55+25, 216, anchor=W, text='25', fill='white')
+        self.line_N = self.canvas_N.create_line(46+25, 216, 54+25, 216, fill='white')
+
+        self.N = self.canvas_N.create_text(23+25, self.canvas_N.winfo_height()//2, text='N', font=('Impact', 20), fill='white')
 
         # GLOBAL ERROR SETTINGS
 
@@ -126,6 +129,31 @@ class FrameSettings:
         string_max_div.trace("w", lambda name, index, mode, s_max_div=string_max_div: self.change_graph_settings(
             max_division=s_max_div))
 
+    def change_N(self, event):
+        if 28 <= event.x <= 70 and 2 <= event.y <= 246:
+            fromy = self.canvas_N.coords(self.scale_N_fill)[1]
+            toy = event.y
+
+            steps = 10
+            for i in range(1, steps + 1):
+                cur_y = fromy + i * (toy - fromy) / steps
+                self.canvas_N.coords(self.scale_N_fill, 25, self.canvas_N.winfo_height() - 4, 49+25, cur_y)  # 2 -> 246
+                self.canvas_N.update()
+                time.sleep(0.1/steps)
+
+            py = 246 - event.y
+            new_n = int(1 + (py / 244) * 199)
+            self.change_graph_settings(n=new_n)
+            self.canvas_N.coords(self.text_N, 55+25, event.y)
+            self.canvas_N.itemconfig(self.text_N, text=str(new_n))
+            self.canvas_N.coords(self.line_N, 46+25, event.y, 54+25, event.y)
+
+            if event.y > self.canvas_N.coords(self.N)[1]:
+                self.canvas_N.itemconfig(self.N, fill='white')
+            else:
+                self.canvas_N.itemconfig(self.N, fill='black')
+
+
     def round_rectangle(self, x1, y1, x2, y2, r=10):
         return (
             x1 + r, y1, x1 + r, y1, x2 - r, y1, x2 - r, y1, x2, y1, x2, y1 + r, x2, y1 + r, x2, y2 - r, x2, y2 - r, x2,
@@ -147,7 +175,9 @@ class FrameSettings:
             arg = i
             break
         try:
-            if arg != 'n' or float(kwargs[arg].get()) != 0:
+            if arg == 'n':
+                self.frame_graphs.change_graphs_settings(kwargs)
+            else:
                 kwargs[arg] = float(kwargs[arg].get())
                 self.frame_graphs.change_graphs_settings(kwargs)
         except:
