@@ -7,7 +7,7 @@ class Graph:
 
     exact_solution = None  # for local errors
 
-    h = 0.5
+    n = 25 # split of graph
     x0 = 1
     y0 = 1
     tox = 9.5
@@ -32,7 +32,7 @@ class Graph:
         self.plane.remove_graph(self)
 
     def __calculate_points(self):
-        self.points = self.method.calculate(self.x0, self.y0, self.tox, self.h, exact_solution=self.exact_solution,
+        self.points = self.method.calculate(self.x0, self.y0, self.tox, self.n, exact_solution=self.exact_solution,
                                             min_division=self.min_division, max_division=self.max_division)
 
     def change_graph_settings(self, kwargs):  # update planes after call this
@@ -41,6 +41,6 @@ class Graph:
         if 'max_division' in kwargs: self.max_division = kwargs['max_division']
         if 'x0' in kwargs: self.x0 = kwargs['x0']
         if 'y0' in kwargs: self.y0 = kwargs['y0']
-        if 'h' in kwargs: self.h = kwargs['h']
+        if 'n' in kwargs: self.n = kwargs['n']
         if 'tox' in kwargs: self.tox = kwargs['tox']
         self.__calculate_points()

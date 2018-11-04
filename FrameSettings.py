@@ -69,15 +69,15 @@ class FrameSettings:
 
         button_reset = Button(self.frame, text='Reset', font=('impact', 13), command=self.reset_settings,
                               background='blue')
-        button_reset.pack(pady=20)
+        button_reset.pack()
 
-        label_h = Label(self.frame, text='h')
-        label_h.pack()
-        string_h = StringVar()
-        string_h.set('0.5')
-        entry_h = Entry(self.frame, textvariable=string_h)
-        entry_h.pack()
-        string_h.trace("w", lambda name, index, mode, s_h=string_h: self.change_graph_settings(h=s_h))
+        label_n = Label(self.frame, text='n')
+        label_n.pack()
+        string_n = StringVar()
+        string_n.set('25')
+        entry_n = Entry(self.frame, textvariable=string_n)
+        entry_n.pack()
+        string_n.trace("w", lambda name, index, mode, s_n=string_n: self.change_graph_settings(n=s_n))
 
         # GLOBAL ERROR SETTINGS
 
@@ -147,7 +147,7 @@ class FrameSettings:
             arg = i
             break
         try:
-            if arg != 'h' or float(kwargs[arg].get()) != 0:
+            if arg != 'n' or float(kwargs[arg].get()) != 0:
                 kwargs[arg] = float(kwargs[arg].get())
                 self.frame_graphs.change_graphs_settings(kwargs)
         except:

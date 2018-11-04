@@ -5,8 +5,9 @@ import math
 class ExactSolution(CalculationMethod):
     const = 1
 
-    def calculate(self, x0, y0, tox, h, **kwargs):
+    def calculate(self, x0, y0, tox, n, **kwargs):
         if x0 >= tox: return []
+        h = (tox - x0) / n
         self.const = self.__calculate_const(x0, y0) # const = 0.8402572149116814
         points = []
         x = x0
