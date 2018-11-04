@@ -7,13 +7,13 @@ class Graph:
 
     exact_solution = None  # for local errors
 
-    h = 0.6
+    h = 0.5
     x0 = 1
     y0 = 1
-    tox = 10
+    tox = 9.5
 
-    min_division = 1  # min split of graph (for global errors)
-    max_division = 2  # max split of graph (for global errors)
+    min_division = 2  # min split of graph (for global errors)
+    max_division = 5  # max split of graph (for global errors)
 
     method = None
     plane = None
