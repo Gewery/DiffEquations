@@ -22,26 +22,30 @@ class FrameSettings:
         label_settings.pack(pady=10)
 
         self.frame.update()
-        top_frame_initial_settings = Frame(self.frame, height=80, width=self.frame.winfo_width(), background=self.background_color)
+        top_frame_initial_settings = Frame(self.frame, height=80, width=self.frame.winfo_width(),
+                                           background=self.background_color)
         top_frame_initial_settings.pack(pady=20, padx=5)
         top_frame_initial_settings.pack_propagate(0)
 
-        canvas_initial_settings = Canvas(top_frame_initial_settings, background=self.background_color, highlightthickness=0)
+        canvas_initial_settings = Canvas(top_frame_initial_settings, background=self.background_color,
+                                         highlightthickness=0)
         canvas_initial_settings.pack()
         frame_initial_settings = Frame(top_frame_initial_settings, background='blue')
         canvas_initial_settings.update()
 
         canvas_initial_settings.create_polygon(
-            self.round_rectangle(0, 0, canvas_initial_settings.winfo_width()-1, canvas_initial_settings.winfo_height()-1),
+            self.round_rectangle(0, 0, canvas_initial_settings.winfo_width() - 1,
+                                 canvas_initial_settings.winfo_height() - 1),
             smooth=True, fill=self.background_color, outline='white')
 
         canvas_initial_settings.create_window(canvas_initial_settings.winfo_width() // 2,
                                               canvas_initial_settings.winfo_height() // 2,
                                               window=frame_initial_settings,
-                                              width=canvas_initial_settings.winfo_width()-5,
-                                              height=canvas_initial_settings.winfo_height()-5)
+                                              width=canvas_initial_settings.winfo_width() - 5,
+                                              height=canvas_initial_settings.winfo_height() - 5)
 
-        down_canvas_initial_settings = Canvas(frame_initial_settings, background=self.background_color, highlightthickness=0)
+        down_canvas_initial_settings = Canvas(frame_initial_settings, background=self.background_color,
+                                              highlightthickness=0)
         down_canvas_initial_settings.pack()
 
         down_canvas_initial_settings.create_text(20, 9, text='X0', fill='white', font=('Arial', 12))
@@ -63,7 +67,9 @@ class FrameSettings:
         self.string_tox.trace("w",
                               lambda name, index, mode, s_tox=self.string_tox: self.change_graph_settings(tox=s_tox))
 
-
+        button_reset = Button(self.frame, text='Reset', font=('impact', 13), command=self.reset_settings,
+                              background='blue')
+        button_reset.pack(pady=20)
 
         label_h = Label(self.frame, text='h')
         label_h.pack()
@@ -73,27 +79,52 @@ class FrameSettings:
         entry_h.pack()
         string_h.trace("w", lambda name, index, mode, s_h=string_h: self.change_graph_settings(h=s_h))
 
-        label_min_div = Label(self.frame, text='min_div')
-        label_min_div.pack()
+        # GLOBAL ERROR SETTINGS
+
+        top_frame_global_error_settings = Frame(self.frame, height=100, width=self.frame.winfo_width(),
+                                                background=self.background_color)
+        top_frame_global_error_settings.pack(pady=20, padx=5)
+        top_frame_global_error_settings.pack_propagate(0)
+
+        canvas_global_error_settings = Canvas(top_frame_global_error_settings, background=self.background_color,
+                                              highlightthickness=0)
+        canvas_global_error_settings.pack()
+        frame_global_error_settings = Frame(top_frame_global_error_settings, background=self.background_color)
+        canvas_global_error_settings.update()
+
+        canvas_global_error_settings.create_polygon(
+            self.round_rectangle(0, 0, canvas_global_error_settings.winfo_width() - 1,
+                                 canvas_global_error_settings.winfo_height() - 1),
+            smooth=True, fill=self.background_color, outline='white')
+
+        canvas_global_error_settings.create_window(canvas_global_error_settings.winfo_width() // 2,
+                                                   canvas_global_error_settings.winfo_height() // 2,
+                                                   window=frame_global_error_settings,
+                                                   width=canvas_global_error_settings.winfo_width() - 5,
+                                                   height=canvas_global_error_settings.winfo_height() - 5)
+
+        down_canvas_global_error_settings = Canvas(frame_global_error_settings, background=self.background_color,
+                                                   highlightthickness=0)
+        down_canvas_global_error_settings.pack()
+        down_canvas_global_error_settings.create_text(1, 0, text='Global error', fill='white', anchor=NW,
+                                                      font=('Arial', 12))
+        down_canvas_global_error_settings.create_text(16, 17, text='division', fill='white', anchor=NW,
+                                                      font=('Arial', 12))
+
+        down_canvas_global_error_settings.create_text(0, 45, text='Minimal', fill='white', anchor=NW, font=('Arial, 11'))
         string_min_div = StringVar()
         string_min_div.set('2')
-        entry_min_div = Entry(self.frame, textvariable=string_min_div)
-        entry_min_div.pack()
+        RoundEntry(down_canvas_global_error_settings, 56, 44, 27, 20, string_min_div)
         string_min_div.trace("w", lambda name, index, mode, s_min_div=string_min_div: self.change_graph_settings(
             min_division=s_min_div))
 
-        label_max_div = Label(self.frame, text='max_div')
-        label_max_div.pack()
+        down_canvas_global_error_settings.create_text(0, 72, text='Maximal', fill='white', anchor=NW,
+                                                      font=('Arial, 11'))
         string_max_div = StringVar()
         string_max_div.set('5')
-        entry_max_div = Entry(self.frame, textvariable=string_max_div)
-        entry_max_div.pack()
+        RoundEntry(down_canvas_global_error_settings, 56, 71, 27, 20, string_max_div)
         string_max_div.trace("w", lambda name, index, mode, s_max_div=string_max_div: self.change_graph_settings(
             max_division=s_max_div))
-
-        button_reset = Button(self.frame, text='Reset', font=('impact', 13), command=self.reset_settings,
-                              background='blue')
-        button_reset.pack(pady=20)
 
     def round_rectangle(self, x1, y1, x2, y2, r=10):
         return (
