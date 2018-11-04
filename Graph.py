@@ -7,7 +7,7 @@ class Graph:
 
     exact_solution = None  # for local errors
 
-    n = 25 # split of graph
+    n = 25  # split of graph
     x0 = 1
     y0 = 1
     tox = 9.5
