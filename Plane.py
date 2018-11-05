@@ -148,6 +148,10 @@ class Plane:
 
     def draw_axes(self):
         self.canvas.update()
+
+        self.canvas.create_text(self.canvas.winfo_width() - 10, self.canvas.winfo_height() - 45, text='X', fill='white')
+        self.canvas.create_text(64, 12, text='Y', fill='white')
+
         self.canvas.create_line(self.shift_OX_right - 1, self.convertY(self.shift_OX_up), self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up), width=3,
                                 fill="white")# OX axis
         self.canvas.create_line(self.canvas.winfo_width() - 5, self.convertY(self.shift_OX_up - 1), self.canvas.winfo_width() - 5 - 10,
